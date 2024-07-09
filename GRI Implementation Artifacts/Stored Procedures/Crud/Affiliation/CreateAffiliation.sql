@@ -1,4 +1,4 @@
--- Stored Procedures To Create Users
+-- Stored Procedures To Create Affiliation
 CREATE PROCEDURE [mod].[CreateAffiliation]
     @company_id INT,
     @user_id INT,
@@ -6,7 +6,8 @@ CREATE PROCEDURE [mod].[CreateAffiliation]
     @email VARCHAR(255),
     @title VARCHAR(255),
     @group_id INT,
-    @new_id INT OUTPUT -- Output parameter to hold the new ID
+    @new_id INT OUTPUT -- Output parameter to hold the new ID 
+                       -- To be used for logging?
 AS
 BEGIN
     INSERT INTO [mod].[affiliation] (
