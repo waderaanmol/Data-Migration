@@ -1,4 +1,4 @@
--- Stored Procedures To Create Users
+-- Stored Procedure To Create Company
 CREATE PROCEDURE [mod].CreateCompany
     @name VARCHAR(255),
     @umbrella VARCHAR(255),
