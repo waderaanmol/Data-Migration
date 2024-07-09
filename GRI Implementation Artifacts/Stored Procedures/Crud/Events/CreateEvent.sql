@@ -1,4 +1,4 @@
--- Stored Procedures To Create Users
+-- Stored Procedures To Create Event
 CREATE PROCEDURE [mod].CreateEvent
     @name VARCHAR(255),
     @date VARCHAR(255),
@@ -6,7 +6,7 @@ CREATE PROCEDURE [mod].CreateEvent
     @subtype_id INT,
     @theme_id INT,
     @venue_id INT,
-    @hours DECIMAL(5, 2)
+    @hours DECIMAL(5, 2) --2 after decimal, 5 digits in total
 AS
 BEGIN
     INSERT INTO [mod].[event] (
