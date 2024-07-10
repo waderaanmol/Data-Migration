@@ -37,6 +37,7 @@ BEGIN
         ELSE IF @entry_event_id IS NOT NULL AND @entry_company_id IS NOT NULL AND @entry_affiliation_id IS NULL
         BEGIN
             -- Handle the case where affiliation_id is null
+            -- Anmol -- Should create u_id and then af_id
             DECLARE @RC int
             DECLARE @company_id int
             DECLARE @user_id int
