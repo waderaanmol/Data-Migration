@@ -76,6 +76,14 @@ END
 GO
 CREATE SEQUENCE [mod].IdSequence_Reporting START WITH 1 INCREMENT BY 1;
 
+-- Create sequences for Tagging table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Tagging' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Tagging];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Tagging START WITH 1 INCREMENT BY 1;
+
 ------------------------------------------------------------------------------------------------------
 -- Create Function to Validate Date Time Columns
 ------------------------------------------------------------------------------------------------------
@@ -157,6 +165,23 @@ EXECUTE [mod].[AddLoggingTriggerToTable]
    'trg_LogTableOperations_Tag'
 GO
 */
+
+------------------------------------------------------------------------------------------------------
+-- Create Tagging Table 
+------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('mod.tagging', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE [mod].[tagging];
+END;
+
+CREATE TABLE [mod].[tagging]
+(
+    t_id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tagging) NOT NULL,
+    u_id INT,
+    tag_id INT,
+    FOREIGN KEY (u_id) REFERENCES [mod].[user](id),
+    FOREIGN KEY (tag_id) REFERENCES [mod].[tags](id)
+);
 
 ------------------------------------------------------------------------------------------------------
 -- Create User Table 
