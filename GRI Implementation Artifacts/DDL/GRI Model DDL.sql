@@ -84,6 +84,52 @@ END
 GO
 CREATE SEQUENCE [mod].IdSequence_Tagging START WITH 1 INCREMENT BY 1;
 
+-- Create sequences for Tag table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Tag' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Tag];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Tag START WITH 1 INCREMENT BY 1;
+GO
+
+-- Create sequences for Theme table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Theme' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Theme];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Theme START WITH 1 INCREMENT BY 1;
+GO
+
+-- Create sequences for Subtype table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Subtype' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Subtype];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Subtype START WITH 1 INCREMENT BY 1;
+GO
+
+-- Create sequences for Venue table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Venue' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Venue];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Venue START WITH 1 INCREMENT BY 1;
+GO
+
+-- Create sequences for Group table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Group' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Group];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Group START WITH 1 INCREMENT BY 1;
+GO
+
+
 ------------------------------------------------------------------------------------------------------
 -- Create Function to Validate Date Time Columns
 ------------------------------------------------------------------------------------------------------
@@ -149,7 +195,7 @@ END;
 
 CREATE TABLE [mod].[tag]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tag) NOT NULL,
     tag_code VARCHAR(255),
     CONSTRAINT CHK_Tag_Format CHECK (
     LEN(tag_code) <= 255 AND
@@ -260,7 +306,7 @@ END;
 
 CREATE TABLE [mod].[group]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Group) NOT NULL,
     group_code VARCHAR(255),
     CONSTRAINT CHK_Group_Format CHECK (
     LEN(group_code) <= 255 AND
@@ -354,7 +400,7 @@ END;
 
 CREATE TABLE [mod].[theme]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Theme) NOT NULL,
     theme_code VARCHAR(255),
     CONSTRAINT CHK_Theme_Format CHECK (
     LEN(theme_code) <= 255 AND
@@ -381,7 +427,7 @@ END;
 
 CREATE TABLE [mod].[subtype]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Subtype) NOT NULL,
     subtype_code VARCHAR(255),
     CONSTRAINT CHK_SubType_Format CHECK (
     LEN(subtype_code) <= 255 AND
@@ -408,7 +454,7 @@ END;
 
 CREATE TABLE [mod].[venue]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Venue) NOT NULL,
     venue_code VARCHAR(255),
     CONSTRAINT CHK_Venue_Format CHECK (
     LEN(venue_code) <= 255 AND
