@@ -84,6 +84,14 @@ END
 GO
 CREATE SEQUENCE [mod].IdSequence_Tagging START WITH 1 INCREMENT BY 1;
 
+-- Create sequences for Log table
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Log' AND schema_id = SCHEMA_ID(N'mod'))
+BEGIN
+    DROP SEQUENCE [mod].[IdSequence_Log];
+END
+GO
+CREATE SEQUENCE [mod].IdSequence_Log START WITH 1 INCREMENT BY 1;
+
 -- Create sequences for Tag table
 IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'IdSequence_Tag' AND schema_id = SCHEMA_ID(N'mod'))
 BEGIN
