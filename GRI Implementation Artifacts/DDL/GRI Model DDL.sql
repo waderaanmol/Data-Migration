@@ -1,8 +1,8 @@
-/*
+
 ------------------------------------------------------------------------------------------------------
 -- Create Mod Schema
 ------------------------------------------------------------------------------------------------------
--- Drop the schema if it exists
+--Drop the schema if it exists
 IF EXISTS (SELECT * FROM sys.schemas WHERE name = 'mod')
 BEGIN
     DROP SCHEMA mod;
@@ -11,7 +11,7 @@ END
 GO
 CREATE SCHEMA mod;
 GO
-*/
+
 
 ------------------------------------------------------------------------------------------------------
 -- Create Sequences for Tables 
@@ -203,7 +203,7 @@ END;
 
 CREATE TABLE [mod].[tag]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tag) NOT NULL,
+    id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tag) NOT NULL,
     tag_code VARCHAR(255),
     CONSTRAINT CHK_Tag_Format CHECK (
     LEN(tag_code) <= 255 AND
@@ -219,23 +219,6 @@ EXECUTE [mod].[AddLoggingTriggerToTable]
    'trg_LogTableOperations_Tag'
 GO
 */
-
-------------------------------------------------------------------------------------------------------
--- Create Tagging Table 
-------------------------------------------------------------------------------------------------------
-IF OBJECT_ID('mod.tagging', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE [mod].[tagging];
-END;
-
-CREATE TABLE [mod].[tagging]
-(
-    t_id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tagging) NOT NULL,
-    u_id INT,
-    tag_id INT,
-    FOREIGN KEY (u_id) REFERENCES [mod].[user](id),
-    FOREIGN KEY (tag_id) REFERENCES [mod].[tags](id)
-);
 
 ------------------------------------------------------------------------------------------------------
 -- Create User Table 
@@ -277,6 +260,23 @@ GO
 */
 
 ------------------------------------------------------------------------------------------------------
+-- Create Tagging Table 
+------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('mod.tagging', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE [mod].[tagging];
+END;
+
+CREATE TABLE [mod].[tagging]
+(
+    t_id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tagging) NOT NULL,
+    u_id INT,
+    tag_id INT,
+    FOREIGN KEY (u_id) REFERENCES [mod].[user](id),
+    FOREIGN KEY (tag_id) REFERENCES [mod].[tag](id)
+);
+
+------------------------------------------------------------------------------------------------------
 -- Create Reporting Table 
 ------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('mod.reporting', 'U') IS NOT NULL
@@ -316,7 +316,7 @@ END;
 
 CREATE TABLE [mod].[group]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Group) NOT NULL,
+    id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Group) NOT NULL,
     group_code VARCHAR(255),
     CONSTRAINT CHK_Group_Format CHECK (
     LEN(group_code) <= 255 AND
@@ -410,7 +410,7 @@ END;
 
 CREATE TABLE [mod].[theme]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Theme) NOT NULL,
+    id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Theme) NOT NULL,
     theme_code VARCHAR(255),
     CONSTRAINT CHK_Theme_Format CHECK (
     LEN(theme_code) <= 255 AND
@@ -437,7 +437,7 @@ END;
 
 CREATE TABLE [mod].[subtype]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Subtype) NOT NULL,
+    id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Subtype) NOT NULL,
     subtype_code VARCHAR(255),
     CONSTRAINT CHK_SubType_Format CHECK (
     LEN(subtype_code) <= 255 AND
@@ -464,7 +464,7 @@ END;
 
 CREATE TABLE [mod].[venue]
 (
-    id INT IDENTITY(1,1) PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Venue) NOT NULL,
+    id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Venue) NOT NULL,
     venue_code VARCHAR(255),
     CONSTRAINT CHK_Venue_Format CHECK (
     LEN(venue_code) <= 255 AND
