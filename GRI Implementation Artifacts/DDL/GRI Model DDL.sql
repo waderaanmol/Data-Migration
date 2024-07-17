@@ -254,7 +254,7 @@ CREATE TABLE [mod].[user]
     last VARCHAR(255),
     source VARCHAR(255),
     tag_id INT,
-    FOREIGN KEY (tag_id) REFERENCES [mod].[tag](id),
+    --FOREIGN KEY (tag_id) REFERENCES [mod].[tag](id),
     notes VARCHAR(255),
     CONSTRAINT CHK_Notes_Format CHECK (
         LEN(notes) <= 255 AND
@@ -289,6 +289,8 @@ CREATE TABLE [mod].[reporting]
     id_system INT IDENTITY(1,1) NOT NULL,
     id INT DEFAULT (NEXT VALUE FOR [mod].IdSequence_Reporting) PRIMARY KEY NOT NULL,
     name VARCHAR(255),
+    r_start VARCHAR(255),
+    r_end DATETIME,
     status VARCHAR(255),
     is_current BIT DEFAULT 1,
     start_date DATETIME DEFAULT GETDATE(),
