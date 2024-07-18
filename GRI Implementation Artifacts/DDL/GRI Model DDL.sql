@@ -236,7 +236,20 @@ CREATE TABLE [mod].[user]
     first VARCHAR(255),
     last VARCHAR(255),
     source VARCHAR(255),
-    tag_id INT,
+    title VARCHAR(255),
+    email_1 VARCHAR(255),
+    CONSTRAINT CHK_Email1_Format CHECK (
+        email_1 LIKE '%_@__%.__%'
+    ),
+    email_2 VARCHAR(255),
+    CONSTRAINT CHK_Email2_Format CHECK (
+        email_2 LIKE '%_@__%.__%'
+    ),
+    status VARCHAR(255),
+    CONSTRAINT CHK_Status CHECK (
+    status IN ('SUBSCRIBED', 'UNSUBSCRIBED', 'CLEANED') OR status IS NULL
+    ),
+    --tag_id INT,
     --FOREIGN KEY (tag_id) REFERENCES [mod].[tag](id),
     notes VARCHAR(255),
     CONSTRAINT CHK_Notes_Format CHECK (
@@ -349,13 +362,15 @@ CREATE TABLE [mod].[company]
     umbrella VARCHAR(255),
     reporting_id INT,
     FOREIGN KEY (reporting_id) REFERENCES [mod].[reporting](id),
+    status VARCHAR(255),
+    CONSTRAINT CHK_Status_Format CHECK (status IS NULL OR status = 'MEMBER'),
     is_current BIT DEFAULT 1,
     start_date DATETIME DEFAULT GETDATE(),
     CONSTRAINT CHK_Timestamp_Format_StartDate_Company CHECK (mod.fn_ValidateDateTimeColumn(start_date) = 1),
-    end_date DATETIME DEFAULT NULL
-        CONSTRAINT CHK_Timestamp_Format_EndDate_Company CHECK (mod.fn_ValidateDateTimeColumn(end_date) = 1)
-
+    end_date DATETIME DEFAULT NULL,
+    CONSTRAINT CHK_Timestamp_Format_EndDate_Company CHECK (mod.fn_ValidateDateTimeColumn(end_date) = 1)
 );
+
 /*
 -- Add Logging Trigger
 EXECUTE [mod].[AddLoggingTriggerToTable] 
@@ -381,8 +396,8 @@ CREATE TABLE [mod].[affiliation]
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES [mod].[user](id),
     is_primary BIT DEFAULT 1,
-    email VARCHAR(255) NOT NULL,
-    title VARCHAR(255),
+    --email VARCHAR(255) NOT NULL,
+    --title VARCHAR(255),
     group_id INT,
     -- Remember to add foreign key check to Group Table
     FOREIGN KEY (group_id) REFERENCES [mod].[group](id),
@@ -552,15 +567,18 @@ CREATE TABLE [mod].[attendance]
     is_speaker BIT DEFAULT 0,
     event_id INT,
     FOREIGN KEY (event_id) REFERENCES [mod].[event](id),
+    company_id INT,
+    FOREIGN KEY (company_id) REFERENCES [mod].[company](id),
     rating DECIMAL(5, 2),
     CONSTRAINT CHK_Rating_Format CHECK (
     rating >= 1 AND rating <= 5 AND
         rating = ROUND(rating, 2) AND
         rating > 0
 	),
-    reporting_id INT,
-    FOREIGN KEY (reporting_id) REFERENCES [mod].[reporting](id),
-    venue VARCHAR(255)
+    --reporting_id INT,
+    --FOREIGN KEY (reporting_id) REFERENCES [mod].[reporting](id),
+    venue_id INT,
+    FOREIGN KEY (venue_id) REFERENCES [mod].[venue](id)
 );
 
 /*
