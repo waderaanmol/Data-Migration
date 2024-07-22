@@ -207,7 +207,7 @@ CREATE TABLE [mod].[tag]
     tag_code VARCHAR(255),
     CONSTRAINT CHK_Tag_Format CHECK (
     LEN(tag_code) <= 255 AND
-        (tag_code IS NULL OR tag_code IN ('PRAC', 'VIP', 'GRI BOARD', 'SFAC', 'SVB23', 'EIR', 'EMERITI', 'RAC', 'PC'))
+        (tag_code IS NULL OR tag_code IN ('PRAC', 'VIP', 'GRI BOARD', 'SFAC', 'SVB23', 'EIR', 'EMERITI', 'RAC', 'PC', 'BSC'))
 	),
     tag_description VARCHAR(255),
 );
@@ -519,7 +519,7 @@ CREATE TABLE [mod].[event]
         type NOT LIKE '%[!@#$%^&*()_+={}|:<>?~]%' AND
 
         -- Allow only specific values
-        type IN ('Events', 'Education', 'Summit')
+        type IN ('Event', 'Education', 'Education-double','Summit')
     ),
     subtype_id INT,
     FOREIGN KEY (subtype_id) REFERENCES [mod].[subtype](id),
@@ -571,10 +571,11 @@ CREATE TABLE [mod].[attendance]
     FOREIGN KEY (company_id) REFERENCES [mod].[company](id),
     rating DECIMAL(5, 2),
     CONSTRAINT CHK_Rating_Format CHECK (
-    rating >= 1 AND rating <= 5 AND
-        rating = ROUND(rating, 2) AND
-        rating > 0
-	),
+    rating IS NULL OR
+    (rating >= 1 AND 
+     rating <= 5 AND
+     rating = ROUND(rating, 2))
+     ),
     --reporting_id INT,
     --FOREIGN KEY (reporting_id) REFERENCES [mod].[reporting](id),
     venue_id INT,
