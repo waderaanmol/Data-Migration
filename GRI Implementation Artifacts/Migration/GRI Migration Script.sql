@@ -1,6 +1,6 @@
 -- Declare source and target databases
-DECLARE @SourceDB NVARCHAR(100) = 'sandboxGRIOriginal';
-DECLARE @TargetDB NVARCHAR(100) = 'sandboxpersonal';
+--DECLARE @SourceDB NVARCHAR(100) = 'sandboxGRIOriginal';
+--DECLARE @TargetDB NVARCHAR(100) = 'sandboxpersonal';
 
 -- Declare source and target databases
 DECLARE @SourceSchema NVARCHAR(100) = 'dbo';
@@ -71,6 +71,9 @@ FROM [dbo].[Group];
 
 ------- SubTypes Reference Table (New Table) ----------------
 
+ALTER TABLE [mod].[subtype]
+ADD priorSubtypePrimaryKey INT;
+
 -- Insert data into [mod].[subtype] including old primary key values
 INSERT INTO [mod].[subtype]
     (subtype_code, subtype_description, priorSubtypePrimaryKey)
@@ -92,23 +95,8 @@ ADD priorUserPrimaryKey INT;
 
 GO -- Separate batches
 
-ALTER TABLE [mod].[user]
-ADD u_email_1 VARCHAR(255);
-
-GO -- Separate batches
-
-ALTER TABLE [mod].[user]
-ADD u_email_2 VARCHAR(255);
-
-GO -- Separate batches
-    
-ALTER TABLE [mod].[user]
-ADD u_title VARCHAR(255);
-
-GO -- Separate batches
-
 INSERT INTO [mod].[user] 
-    (display, first, last, source, notes, priorUserPrimaryKey, u_email_1, u_email_2, u_title)
+    (display, first, last, source, notes, priorUserPrimaryKey, email_1, email_2, title)
 SELECT
     sourceUserTable.u_display AS display,
     sourceUserTable.u_first AS first,
@@ -117,9 +105,9 @@ SELECT
     --tagrefTable.id AS tag_id,
     sourceUserTable.u_notes AS notes, 
     sourceUserTable.u_id AS priorUserPrimaryKey,
-    sourceUserTable.u_email_1 AS u_email_1,
-    sourceUserTable.u_email_2 AS u_email_2,
-    sourceUserTable.u_title AS u_title
+    sourceUserTable.u_email_1 AS email_1,
+    sourceUserTable.u_email_2 AS email_2,
+    sourceUserTable.u_title AS title
 FROM [dbo].[users] AS sourceUserTable
 --LEFT JOIN [mod].[tag] AS tagrefTable
 --ON sourceUserTable.u_tag = tagrefTable.tag_code;
@@ -139,8 +127,8 @@ GO
 INSERT INTO [mod].[tagging]
     (u_id, tag_id, priorTaggingPrimaryKey)
 SELECT
-    u_id,
-    tag_id,
+    u_id AS u_id,
+    tag_id AS tag_ig,
     t_id AS priorTaggingPrimaryKey
 FROM [dbo].[tagging];
 GO
@@ -159,8 +147,8 @@ INSERT INTO [mod].[reporting]
     (name, r_start, r_end, status, priorReportingPrimaryKey)
 SELECT
     r_name AS name,
-    r_start,
-    r_end,
+    r_start AS r_start
+    r_end AS r_end,
     r_status AS status,
     r_id AS priorReportingPrimaryKey
 FROM [dbo].[reporting];
@@ -175,19 +163,16 @@ Migrate Compaany Table
 ALTER TABLE [mod].[company]
 ADD priorCompanyPrimaryKey INT;
 
--- Add a column to store the old foreign key
-ALTER TABLE [mod].[company]
-ADD priorReportingPrimaryKey INT;
-
 GO -- Separate batches
 
 -- Insert data from old schema to new schema
 INSERT INTO [mod].[company]
-    (name, umbrella, priorReportingPrimaryKey, priorCompanyPrimaryKey)
+    (name, umbrella, reporting_id, status, priorCompanyPrimaryKey)
 SELECT
     sourceCompanyTable.c_name AS name,
     sourceCompanyTable.c_umbrella AS umbrella, 
-    sourceCompanyTable.c_r_id AS priorReportingPrimaryKey,
+    sourceCompanyTable.c_r_id AS reporting_id,
+    sourceCompanyTable.c_status AS status,
     sourceCompanyTable.c_id AS priorCompanyPrimaryKey
 FROM [dbo].[company] AS sourceCompanyTable;
 
@@ -201,12 +186,11 @@ ALTER TABLE [mod].[affiliation]
 ADD priorAffiliationPrimaryKey INT;
 
 INSERT INTO [mod].[affiliation]
-    (group_id, company_id, user_id, title, priorAffiliationPrimaryKey)
+    (group_id, company_id, user_id, priorAffiliationPrimaryKey)
 SELECT
     groupTable.id AS group_id,
     companyTable.id AS company_id, 
     usersTable.id AS user_id,
-    usersTable.u_title AS title
     sourceAffiliationTable.a_id AS priorAffiliationPrimaryKey
 FROM [dbo].[affiliation] AS sourceAffiliationTable
 LEFT JOIN [mod].[group] AS groupTable
@@ -274,6 +258,7 @@ LEFT JOIN [mod].[event] AS eventTable
 ON sourceAttendanceTable.a_e_id = eventTable.priorEventPrimaryKey
 LEFT JOIN [mod].[reporting] AS reportingTable
 ON sourceAttendanceTable.a_r_id = reportingTable.priorReportingPrimaryKey
+);
 
 
 /*
