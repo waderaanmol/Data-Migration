@@ -31,6 +31,8 @@ ALTER TABLE [mod].[company] DROP CONSTRAINT IF EXISTS FK_company_reporting;
 
 -- Drop foreign key constraints referencing the tag table
 ALTER TABLE [mod].[tagging] DROP CONSTRAINT IF EXISTS FK_tagging_tag;
+ALTER TABLE [mod].[tag] DROP CONSTRAINT IF EXISTS DF__tag__id__26CFC035;
+ALTER TABLE [mod].[tag] DROP CONSTRAINT IF EXISTS CHK_Tag_Format;
 
 ------------------------------------------------------------------------------------------------------
 -- Now drop the tables
