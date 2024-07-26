@@ -429,7 +429,7 @@ CREATE TABLE [mod].[theme]
     theme_code VARCHAR(255),
     CONSTRAINT CHK_Theme_Format CHECK (
     LEN(theme_code) <= 255 AND
-        (theme_code IS NULL OR theme_code IN ('Technology', 'Sustainable Fianace', 'Macroeconomics', 'CSB', 'Climate', 'Geopolitical Risk', 'Pension', 'Cyber Risk'))
+        (theme_code IS NULL OR theme_code IN ('Technology','Sustainable Finance','Macroeconomics','Climate','Geopolitical Risk','Pension','Cyber Risk','Artificial Intelligence','Masterclass','Risk Management'))
 	),
     theme_description VARCHAR(255),
 );
