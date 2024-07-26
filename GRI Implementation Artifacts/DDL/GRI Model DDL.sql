@@ -256,6 +256,7 @@ CREATE TABLE [mod].[user]
         LEN(notes) <= 255 AND
         notes NOT LIKE '%[!@#$%^&*()_+={}|:<>?~]%'
     ),
+	time_stamp DATETIME,
     is_current BIT DEFAULT 1,
     start_date DATETIME DEFAULT GETDATE(),
     CONSTRAINT CHK_Timestamp_Format_StartDate CHECK (mod.fn_ValidateDateTimeColumn(start_date) = 1),
@@ -284,8 +285,8 @@ CREATE TABLE [mod].[tagging]
 (
     t_id INT PRIMARY KEY DEFAULT (NEXT VALUE FOR [mod].IdSequence_Tagging) NOT NULL,
     u_id INT,
-    tag_id INT,
     FOREIGN KEY (u_id) REFERENCES [mod].[user](id),
+	tag_id INT,
     FOREIGN KEY (tag_id) REFERENCES [mod].[tag](id)
 );
 
@@ -302,7 +303,7 @@ CREATE TABLE [mod].[reporting]
     id_system INT IDENTITY(1,1) NOT NULL,
     id INT DEFAULT (NEXT VALUE FOR [mod].IdSequence_Reporting) PRIMARY KEY NOT NULL,
     name VARCHAR(255),
-    r_start VARCHAR(255),
+    r_start DATETIME,
     r_end DATETIME,
     status VARCHAR(255),
     is_current BIT DEFAULT 1,
@@ -565,6 +566,8 @@ CREATE TABLE [mod].[attendance]
     is_media BIT DEFAULT 0,
     is_staff BIT DEFAULT 0,
     is_speaker BIT DEFAULT 0,
+	user_id INT,
+	FOREIGN KEY (user_id) REFERENCES [mod].[user](id),
     event_id INT,
     FOREIGN KEY (event_id) REFERENCES [mod].[event](id),
     company_id INT,
@@ -575,12 +578,20 @@ CREATE TABLE [mod].[attendance]
     (rating >= 1 AND 
      rating <= 5 AND
      rating = ROUND(rating, 2))
-     ),
+	),
     --reporting_id INT,
     --FOREIGN KEY (reporting_id) REFERENCES [mod].[reporting](id),
     venue_id INT,
-    FOREIGN KEY (venue_id) REFERENCES [mod].[venue](id)
+    FOREIGN KEY (venue_id) REFERENCES [mod].[venue](id),
+	group_id INT
+	FOREIGN KEY (group_id) REFERENCES [mod].[group](id)
 );
+-- Remove the CHECK constraint if it exists
+ALTER TABLE [mod].[attendance]
+DROP CONSTRAINT CHK_Rating_Format;
+
+ALTER TABLE [mod].[attendance]
+ALTER COLUMN rating INT;
 
 /*
 -- Add Logging Trigger
