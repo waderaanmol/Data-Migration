@@ -40,9 +40,6 @@ DBCC CHECKIDENT (reporting, RESEED, 0);
 DELETE FROM [mod].[Subtype];
 DBCC CHECKIDENT (subtype, RESEED, 0);
 
-DELETE FROM [mod].[tag];
-DBCC CHECKIDENT (tag, RESEED, 0);
-
 DELETE FROM [mod].[company];
 DBCC CHECKIDENT (company, RESEED, 0);
 
